@@ -1,0 +1,10 @@
+This folder contains some solutions for the simple question:
+
+Remove duplicates lines from a file.
+
+The more specific question is described at united-coders.com.
+
+
+solve_bitarray.c - the c version of mapping numbers to bits.
+solve_bitarray.py - the python version of mapping numbers to bits.
+solve_qsort.c - remove duplicates by sorting the array

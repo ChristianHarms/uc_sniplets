@@ -13,7 +13,7 @@ int main(int argc, char*argv[]) {
 
   while (fgets(line, 100, fp)) {
     i = atoi(line);
-    bit = (char *)bitarray[(i-1000000)>>3];
+    bit = (int)bitarray[(i-1000000)>>3];
     if (!(bit & 1<<(i%8))) {
       printf("%d\n", i);
       bit|=1<<(i%8;
