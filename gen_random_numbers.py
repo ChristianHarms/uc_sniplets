@@ -16,10 +16,11 @@ def generateNumbers(limit = int(sys.argv[1]) or 13000000,
   #add 1% doubles to the list of digits
   myList = list(digits)
   for x in range(limit/100):
-    myList.append(random.choice(myList))
+    double = random.choice(myList)
+    myList.append(double)
 
-  output.writelines(map(str, myList))
+  output.writelines(map(lambda x:"%s\n" % x, myList))
 #generateNumbers
 
 if __name__ == "__main__":
-  print generateNumbers()
+  generateNumbers()

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 int compare(const void *pa, const void *pb) {
   const int *a = (const int *)pa;
@@ -10,20 +11,20 @@ int compare(const void *pa, const void *pb) {
 int main(int argc, char*argv[]) {
 
   char line[100];
-  int32 *digits;
+  int32_t *digits;
   FILE *fp;
   int i=0, count, last;
 
-  if (argc<3) {
-    printf("%s <inputfile> <lines>", argv[0]);
+  if (argc<2) {
+    printf("%s <lines> - got %d", argv[0], argc);
     exit(-1);
   }
-  count = (int)atoi(argv[2]);
-  fp = fopen(argv[1], "r");
+  count = (int)atoi(argv[1]);
+  fp = stdin;
   digits = (int *)malloc(count * sizeof(int));
 
   while (fgets(line, 100, fp)) {
-    digits[i++] = (int32)atoi(line);
+    digits[i++] = (int32_t)atoi(line);
   }
   fclose(fp);
 
@@ -34,4 +35,6 @@ int main(int argc, char*argv[]) {
     if (last!=digits[i]) printf("%d\n", digits[i]);
     last = digits[i];
   }
+
+  return 0;
 }
