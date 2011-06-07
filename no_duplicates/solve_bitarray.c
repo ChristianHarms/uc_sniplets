@@ -5,7 +5,7 @@ int main(int argc, char*argv[]) {
 
   char line[100];
   char *bit, *bitarray = (char *)malloc(12375000);
-  FILE *fp = stdin;
+  FILE *fp = fopen(argv[1], "r");
 
   int i;
 
@@ -17,5 +17,5 @@ int main(int argc, char*argv[]) {
     }
   }
   fclose(fp);
-  return 1;
+  return 0;
 }

@@ -11,25 +11,22 @@ int compare(const void *pa, const void *pb) {
 int main(int argc, char*argv[]) {
 
   char line[100];
-  int32_t *digits;
-  FILE *fp;
-  int i=0, count, last;
+  int i=0, last;
+  FILE *fp = fopen(argv[1], "r");
+  int count = (int)atoi(argv[2]);
+  int32_t *digits = (int *)malloc(count * sizeof(int));
 
-  if (argc<2) {
-    printf("%s <lines> - got %d", argv[0], argc);
-    exit(-1);
-  }
-  count = (int)atoi(argv[1]);
-  fp = stdin;
-  digits = (int *)malloc(count * sizeof(int));
-
+  // reading the lines, convert into an int, push into array
   while (fgets(line, 100, fp)) {
     digits[i++] = (int32_t)atoi(line);
   }
   fclose(fp);
 
+
+  //sort the complete array
   qsort(digits, count, sizeof(int), compare);
 
+  //Print all int, ignore doubles
   last = -1;
   for (i=0; i<count; i++) {
     if (last!=digits[i]) printf("%d\n", digits[i]);

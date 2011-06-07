@@ -4,26 +4,21 @@ read unsorted numbers (one each line) and filter the
 doubles out. this variant sort only sub-ranges and merge 
 the sub-parts with heapq.
 
-This code is not memory-optimized (like the array.array
-byte-efficient list module).
-
-
 '''
 import sys, tempfile, heapq
 
-limit = 50000
-if len(sys.argv)>1:
-    limit = int(sys.argv[1])
+limit = 40000
 
 def fileIterator(digits):
     fp = tempfile.TemporaryFile()
-    fp.write("\n".join(map(lambda x:str(x), sorted(digits))))
+    digits.sort()
+    fp.write("\n".join(map(lambda x:str(x), digits)))
     fp.seek(0)
     return fp
 
 iters = []
 digits = []
-for line in sys.stdin:
+for line in file(sys.argv[1]):
     digits.append(int(line.strip()))
     if len(digits)==limit:
         iters.append(fileIterator(digits))
@@ -34,5 +29,5 @@ iters.append(fileIterator(digits))
 oldItem = -1
 for sortItem in heapq.merge(*iters):
     if oldItem != sortItem:
-        print "%s" % sortItem.strip()
+        print sortItem.strip()
     oldItem = sortItem

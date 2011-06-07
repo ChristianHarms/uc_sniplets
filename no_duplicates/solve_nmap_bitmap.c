@@ -30,7 +30,7 @@ void rmdup(char* file)
             if ((bitvec[bvadr] & bvb) == 0) 
             {
                 bitvec[bvadr] |= bvb;
-                //printf("%d\n", num);
+                printf("%d\n", num);
             }
             num = 0;
         }
