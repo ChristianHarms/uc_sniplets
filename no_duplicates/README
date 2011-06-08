@@ -12,10 +12,12 @@ solve_bitarray.c    # the c version of mapping numbers to bits.
 solve_nmap_bitmap.c # the same bitmap trick, but reading with nmap!
 solve_qsort.c       # sorting the array, print no duplicates
 solve_sort.py       # sorting the array, print no duplicates
+solve_number_sort.py # sorting the int array, print no duplicates
 solve_set.py        # storing in a set
 solve_set.lua       # storing in a set
 perl -lne'exists $h{$_} or print $h{$_}=$_' # perl one-liner
 sort -n -u          # simple sort und unique by command line
+sort -u             # string sort und unique by command line
 
 And here my varaints with limited memory usage
 sort -n -u -S 5M    # sorting, limited by 20MB

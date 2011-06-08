@@ -9,7 +9,7 @@ import sys, tempfile, heapq
 
 limit = 40000
 
-def fileIterator(digits):
+def sortedFileIterator(digits):
     fp = tempfile.TemporaryFile()
     digits.sort()
     fp.write("\n".join(map(lambda x:str(x), digits)))
@@ -21,9 +21,9 @@ digits = []
 for line in file(sys.argv[1]):
     digits.append(int(line.strip()))
     if len(digits)==limit:
-        iters.append(fileIterator(digits))
+        iters.append(sortedFileIterator(digits))
         digits = []
-iters.append(fileIterator(digits))
+iters.append(sortedFileIterator(digits))
 
 #merge all sorted ranges and filter doubles
 oldItem = -1

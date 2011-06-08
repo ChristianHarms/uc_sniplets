@@ -4,16 +4,18 @@
 int main(int argc, char*argv[]) {
 
   char line[100];
-  char *bit, *bitarray = (char *)malloc(12375000);
+  const minValue = 1000000;
+  const maxValue = 100000000;
+  char *bitarray = (char *)malloc((maxValue - minValue) / 8);
   FILE *fp = fopen(argv[1], "r");
 
-  int i;
+  int pos;
 
   while (fgets(line, 100, fp)) {
-    i = atoi(line);
-    if (!(bitarray[(i-1000000)>>3] & 1<<(i%8))) {
-      printf("%d\n", i);
-      bitarray[(i-1000000)>>3]|=(1<<(i%8));
+    pos = atoi(line);
+    if (!(bitarray[(pos-minValue)>>3] & 1<<(pos%8))) {
+      printf("%d\n", pos);
+      bitarray[(pos-minValue)>>3]|=(1<<(pos%8));
     }
   }
   fclose(fp);

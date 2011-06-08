@@ -1,7 +1,7 @@
 import sys
 
 last = ""
-for n in sorted(open(sys.argv[1])):
-    if last != n:
-        sys.stdout.write( n )
-    last = n
+for line in sorted(open(sys.argv[1])):
+    if last != line:
+        sys.stdout.write(line)
+    last = line

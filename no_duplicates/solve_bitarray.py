@@ -1,11 +1,11 @@
 import sys
 from bitarray import bitarray
-LOW = 1000000
-HIGH = 100000000
-v = bitarray(HIGH-LOW+1)
+minValue = 1000000
+maxValue = 100000000
+bits = bitarray(maxValue-minValue+1)
  
 for line in file(sys.argv[1]):
    i = int(line)
-   if not v[i - LOW]:
-       v[i - LOW] = 1
-       print i
+   if not bits[i - minValue]:
+       bits[i - minValue] = 1
+       sys.stdout.write(line)

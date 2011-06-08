@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import sys, re, tempfile, os, tempfile, subprocess, simplejson
+simplejson.encoder.FLOAT_REPR = lambda f: ("%.5f" % f)
 
 try:
     tests = filter(lambda x:re.match("[^#].*? # .*?", x), file("README").readlines())
@@ -8,15 +9,22 @@ except IOError:
     print "The README file is needed for the benchmarks."
     sys.exit(1)
 
+print "Checking interpreter and needed commands ..."
+for cmd in ["lua", "gcc", "python", "perl"]:
+    if os.system("which %s" % cmd):
+        print "%s is not in your path - install it" % cmd
+        sys.exit(1)
+
+print "Checking needed python module ..."
 try:
     import bitarray
 except ImportError:
     print "You have to install the bitarray python module"
     sys.exit(1)
 
-#generating testdata
-testCases = zip([100000, 300000, 750000, 1500000, 3000000, 6000000, 13000000],
-            ["/tmp/%s.txt"%x for x in ["100k", "300k", "750k", "1.5m", "3m", "6m", "13m"]])
+
+#generating testdata, starting from 1 million to 13 million
+testCases = [(int(i * 1e6),"/tmp/%dm.txt"%i) for i in range(1,6)]
 
 for count, fn in testCases:
     if os.path.exists(fn):
@@ -27,7 +35,7 @@ for count, fn in testCases:
 
 #create temp. filenames for output
 timeOutName = tempfile.mktemp()
-collect = dict([(str(x[0]), {}) for x in testCases])
+collect = dict([(x[0], {}) for x in testCases])
 
 for test in tests:
     source, desc = re.split("\s+#\s+", test)
@@ -71,18 +79,19 @@ for test in tests:
         dataOut = file(dataOutName, "w")
         errCode = subprocess.Popen(cmdTest, stdout=dataOut, shell=True).wait()
         #print "errCode: %d" % errCode
-        i = open(timeOutName)
+        input = open(timeOutName)
         try:
-            collect[str(lineCount)][source] = i.read().strip().split()
+            collect[lineCount][source] = map(float, input.read().strip().split())
+            collect[lineCount][source][2]/=1024 #saving MB, not KB
         finally:
-            i.close()
+            input.close()
             os.unlink(timeOutName)
         dataOut.close()
 
 json={}
 tests = sorted(collect.keys(), lambda a,b: int(a)-int(b))
-scripts = sorted(collect["100000"].keys())
-for i, chart in enumerate(["usertime in sec", "systemtime in sec", "max memory in kb"]):
+scripts = sorted(collect[testCases[0][0]].keys())
+for i, chart in enumerate(["usertime in sec", "systemtime in sec", "max memory in MB"]):
   json[str(i)] = {"xAxis": {"categories": tests , "title": {"text": "count of numbers"}}, 
                   "yAxis": {"title":{"text":chart}},
                   "chart": {"renderTo": "chart%d"%i, "defaultSeriesType": 'spline'},
@@ -99,10 +108,10 @@ for i, chart in enumerate(["usertime in sec", "systemtime in sec", "max memory i
 
   for script in scripts:
     json[str(i)]['series'].append({"name": script,
-        "data": [float(collect[test][script][i]) for test in tests]
+        "data": [collect[test[0]][script][i] for test in testCases]
                            })
 
-print "generating charts.json for highcharts.com ..."
-fp = file("charts.json", "w")
+print "generating charts.js for highcharts.com ..."
+fp = file("charts.js", "w")
 fp.write("var charts = "+simplejson.dumps(json)+";");
 fp.close()
