@@ -24,7 +24,7 @@ except ImportError:
 
 
 #generating testdata, starting from 1 million to 13 million
-testCases = [(int(i * 1e6),"/tmp/%dm.txt"%i) for i in range(1,4)]
+testCases = [(int(i * 1e6),"/tmp/%dm.txt"%i) for i in range(1,14)]
 
 for count, fn in testCases:
     if os.path.exists(fn):
