@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import sys, re, tempfile, os, tempfile, subprocess, simplejson
+import sys, re, tempfile, os, tempfile, subprocess, simplejson, time
 simplejson.encoder.FLOAT_REPR = lambda f: ("%.5f" % f)
 
 try:
@@ -24,7 +24,7 @@ except ImportError:
 
 
 #generating testdata, starting from 1 million to 13 million
-testCases = [(int(i * 1e6),"/tmp/%dm.txt"%i) for i in range(1,6)]
+testCases = [(int(i * 1e6),"/tmp/%dm.txt"%i) for i in range(1,4)]
 
 for count, fn in testCases:
     if os.path.exists(fn):
@@ -68,6 +68,7 @@ for test in tests:
 
     #run the test code with the different input files
     for (lineCount, dataInName) in testCases:
+        time.sleep(1)
         cmdTest = "%s %s" % (cmd, dataInName)
 
         #only the qsort-C variant need the line count as parameter
@@ -92,22 +93,24 @@ json={}
 tests = sorted(collect.keys(), lambda a,b: int(a)-int(b))
 scripts = sorted(collect[testCases[0][0]].keys())
 for i, chart in enumerate(["usertime in sec", "systemtime in sec", "max memory in MB"]):
-  json[str(i)] = {"xAxis": {"categories": tests , "title": {"text": "count of numbers"}}, 
-                  "yAxis": {"title":{"text":chart}},
-                  "chart": {"renderTo": "chart%d"%i, "defaultSeriesType": 'spline'},
-                  "series": [],
-                  #"legend": { "layout": 'vertical',
-                  #            "align": 'right',
-                  #            "verticalAlign": 'top',
-                  #            "x": -10,
-                  #            "y": 100,
-                  #            "borderWidth": 0
-                  #            },
-                  "title": { "text": chart }
-                  }
+  for j in range(3):
+    json[str(i+j*3)] = {"xAxis": {"categories": tests , "title": {"text": "count of numbers"}}, 
+                        "yAxis": {"title":{"text":chart}},
+                        "chart": {"renderTo": "chart%d"%(j*3+i), "defaultSeriesType": 'spline'},
+                        "series": [],
+                        "title": { "text": chart }
+                        }
 
   for script in scripts:
-    json[str(i)]['series'].append({"name": script,
+    #script with sort are the first charts
+    #script with bitarray are the last charts
+    if script.find("sort")!=-1:
+        chart = str(i)
+    elif script.find("bit")!=-1:
+        chart = str(6 + i)
+    else:
+        chart = str(3 + i)
+    json[chart]['series'].append({"name": script,
         "data": [collect[test[0]][script][i] for test in testCases]
                            })
 

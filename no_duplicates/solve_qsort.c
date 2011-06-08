@@ -32,5 +32,5 @@ int main(int argc, char*argv[]) {
     if (last!=digits[i]) printf("%d\n", digits[i]);
     last = digits[i];
   }
-  return 0;<
+  return 0;
 }
