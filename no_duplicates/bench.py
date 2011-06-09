@@ -95,8 +95,8 @@ scripts = sorted(collect[testCases[0][0]].keys())
 for i, chart in enumerate(["usertime in sec", "systemtime in sec", "max memory in MB"]):
   for j in range(3):
     json[str(i+j*3)] = {"xAxis": {"categories": tests , "title": {"text": "count of numbers"}}, 
-                        "yAxis": {"title":{"text":chart}},
-                        "chart": {"renderTo": "chart%d"%(j*3+i), "defaultSeriesType": 'spline'},
+                        "yAxis": {"title":{"text":chart}, "min":0},
+                        "chart": {"renderTo": "chart%d"%(j*3+i), "defaultSeriesType": 'line'},
                         "series": [],
                         "title": { "text": chart }
                         }
